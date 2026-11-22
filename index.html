@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MProject</title>
+<style>
+  :root{
+    --bg1:#0b1220; --bg2:#0f172a;
+    --card:#111c33; --card-brd:#1e2b47;
+    --txt:#e2e8f0; --muted:#94a3b8;
+    --azul:#3b82f6; --azul2:#2563eb; --azul-soft:#dbeafe;
+    --amber:#fbbf24;
+    --erro:#f87171; --erro-bg:#3b1d22; --erro-brd:#7f2a33;
+    --ok:#34d399;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0; font-family:"Segoe UI", system-ui, -apple-system, sans-serif;
+    color:var(--txt);
+    background:radial-gradient(1200px 700px at 50% -10%, #16264a 0%, var(--bg2) 45%, var(--bg1) 100%);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; min-height:100%;
+  }
+  .card{
+    width:100%; max-width:380px;
+    background:linear-gradient(180deg, #13213c 0%, var(--card) 100%);
+    border:1px solid var(--card-brd);
+    border-radius:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+    padding:34px 30px 30px;
+  }
+  .logo-wrap{display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:22px;}
+  .logo{
+    width:72px; height:72px; border-radius:18px;
+    background:linear-gradient(145deg, #60a5fa 0%, var(--azul) 45%, var(--azul2) 100%);
+    box-shadow:0 10px 26px rgba(37,99,235,.45), inset 0 2px 2px rgba(255,255,255,.35), inset 0 -3px 6px rgba(0,0,0,.25);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .logo span{
+    font-weight:800; font-size:44px; color:#fff; line-height:1;
+    letter-spacing:-1px; text-shadow:0 2px 4px rgba(0,0,0,.25);
+    font-family:"Segoe UI", system-ui, sans-serif;
+  }
+  .marca{font-size:15px; color:var(--muted); letter-spacing:3px; text-transform:uppercase;}
+  label{display:block; font-size:13px; color:var(--muted); margin:14px 0 6px;}
+  input[type=text], input[type=password]{
+    width:100%; padding:12px 14px; border-radius:12px;
+    background:#0c1730; border:1px solid #243454; color:var(--txt);
+    font-size:15px; outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  input[type=text]:focus, input[type=password]:focus{
+    border-color:var(--azul); box-shadow:0 0 0 3px rgba(59,130,246,.18);
+  }
+  .remember{display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13px; color:var(--muted); cursor:pointer; user-select:none;}
+  .remember input{width:16px; height:16px; accent-color:var(--azul);}
+  .btn{
+    width:100%; margin-top:20px; padding:13px 16px; border:none; border-radius:13px;
+    background:linear-gradient(180deg, #4f93ff 0%, var(--azul) 55%, var(--azul2) 100%);
+    color:#fff; font-size:15.5px; font-weight:700; cursor:pointer;
+    box-shadow:0 8px 20px rgba(37,99,235,.4), inset 0 1px 0 rgba(255,255,255,.3);
+    transition:transform .08s, box-shadow .15s, filter .15s;
+    font-family:inherit;
+  }
+  .btn:hover{filter:brightness(1.06); box-shadow:0 10px 26px rgba(37,99,235,.5);}
+  .btn:active{transform:translateY(1px);}
+  .btn:disabled{filter:grayscale(.4) brightness(.8); cursor:default; box-shadow:none;}
+  .btn.download{
+    background:linear-gradient(180deg, #34d399 0%, #10b981 55%, #059669 100%);
+    box-shadow:0 8px 20px rgba(16,185,129,.4), inset 0 1px 0 rgba(255,255,255,.3);
+    text-decoration:none; display:block; text-align:center;
+  }
+  .btn.download:hover{filter:brightness(1.06);}
+  .erro{
+    margin-top:16px; padding:11px 13px; border-radius:11px;
+    background:var(--erro-bg); border:1px solid var(--erro-brd); color:var(--erro);
+    font-size:13.5px; display:none;
+  }
+  .erro.show{display:block;}
+  .spin{
+    width:16px; height:16px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff;
+    border-radius:50%; display:inline-block; vertical-align:-3px; margin-right:8px;
+    animation:gira .7s linear infinite;
+  }
+  @keyframes gira{to{transform:rotate(360deg);}}
+  /* painel logado */
+  #painel{display:none; text-align:center;}
+  #painel.show{display:block;}
+  .ola{font-size:15px; color:var(--azul-soft); margin-top:4px;}
+  .ola b{color:#fff;}
+  .dias-box{
+    margin:22px 0 6px; padding:22px 16px; border-radius:16px;
+    background:#0c1730; border:1px solid #243454;
+  }
+  .dias-num{font-size:52px; font-weight:800; color:var(--amber); line-height:1; letter-spacing:-1px;}
+  .dias-lbl{font-size:13px; color:var(--muted); margin-top:8px; text-transform:uppercase; letter-spacing:1.5px;}
+  .semprazo{font-size:26px; font-weight:700; color:var(--ok); line-height:1.2;}
+  .sair{margin-top:18px; background:none; border:none; color:var(--muted); font-size:13px; cursor:pointer; text-decoration:underline; font-family:inherit;}
+  .sair:hover{color:var(--txt);}
+  .rodape{margin-top:22px; text-align:center; font-size:11.5px; color:#475569;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <!-- TELA DE LOGIN -->
+    <div id="login">
+      <div class="logo-wrap">
+        <div class="logo"><span>M</span></div>
+      </div>
+
+      <form id="form" autocomplete="on">
+        <label for="usuario">Usuário</label>
+        <input type="text" id="usuario" name="usuario" autocomplete="username" required>
+
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" autocomplete="current-password" required>
+
+        <label class="remember"><input type="checkbox" id="lembrar"> Lembrar usuário</label>
+
+        <button class="btn" id="entrar" type="submit">Entrar</button>
+      </form>
+
+      <div class="erro" id="erro"></div>
+    </div>
+
+    <!-- PAINEL APOS LOGIN -->
+    <div id="painel">
+      <div class="logo-wrap">
+        <div class="logo"><span>M</span></div>
+      </div>
+      <div class="ola">Olá, <b id="nome"></b></div>
+
+      <div class="dias-box" id="diasBox"></div>
+
+      <a class="btn download" id="baixar" href="#">⬇ Baixar Launcher</a>
+      <button class="sair" id="sair">Sair</button>
+    </div>
+
+    <div class="rodape">Acesso exclusivo · MProject</div>
+  </div>
+
+<script>
+  // ===================== CONFIG =====================
+  const SUPABASE_URL = "https://tmqmjegcqhnpyfbdeydo.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_W8gHxT9mbiniQkoB6hlYuw_2nn8sgn5";
+  // Launcher no GitHub Releases (sem limite de banda):
+  const DOWNLOAD_URL = "https://github.com/themproject2026/mproject/releases/latest/download/MProject.exe";
+  // Versao alta: o site nunca cai na trava de "app desatualizado".
+  const VERSAO = "999.0";
+  // ==================================================
+
+  const $ = (id) => document.getElementById(id);
+  const form = $("form"), erro = $("erro"), btn = $("entrar");
+
+  // lembrar usuario (so o nome, nunca a senha)
+  try{
+    const salvo = localStorage.getItem("meira_usuario");
+    if(salvo){ $("usuario").value = salvo; $("lembrar").checked = true; }
+  }catch(e){}
+
+  function mostrarErro(msg){ erro.textContent = msg; erro.classList.add("show"); }
+  function limparErro(){ erro.classList.remove("show"); }
+
+  const MOTIVOS = {
+    "usuario_ou_senha": "Usuário ou senha incorretos.",
+    "bloqueado": "Seu acesso está bloqueado. Fale com o Meira.",
+    "expirado": "Seu acesso expirou. Fale com o Meira para renovar.",
+    "desatualizado": "Não foi possível validar. Tente novamente mais tarde."
+  };
+
+  function diasRestantes(validade){
+    if(!validade) return null; // sem prazo
+    const hoje = new Date(); hoje.setHours(0,0,0,0);
+    const fim = new Date(String(validade).slice(0,10) + "T00:00:00");
+    return Math.ceil((fim - hoje) / 86400000);
+  }
+
+  function abrirPainel(usuario, validade){
+    $("nome").textContent = usuario;
+    const dias = diasRestantes(validade);
+    const box = $("diasBox");
+    if(dias === null){
+      box.innerHTML = '<div class="semprazo">Acesso<br>sem prazo</div>';
+    }else{
+      const n = Math.max(dias, 0);
+      box.innerHTML = '<div class="dias-num">'+n+'</div>'+
+                      '<div class="dias-lbl">'+(n===1?'dia de ativação':'dias de ativação')+'</div>';
+    }
+    $("baixar").setAttribute("href", DOWNLOAD_URL);
+    $("login").style.display = "none";
+    $("painel").classList.add("show");
+  }
+
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    limparErro();
+    const u = $("usuario").value.trim();
+    const s = $("senha").value;
+    if(!u || !s){ mostrarErro("Preencha usuário e senha."); return; }
+
+    // lembrar
+    try{
+      if($("lembrar").checked) localStorage.setItem("meira_usuario", u);
+      else localStorage.removeItem("meira_usuario");
+    }catch(e){}
+
+    btn.disabled = true;
+    const txtOrig = btn.textContent;
+    btn.innerHTML = '<span class="spin"></span>Entrando...';
+
+    try{
+      const resp = await fetch(SUPABASE_URL + "/rest/v1/rpc/login", {
+        method:"POST",
+        headers:{
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ p_user:u, p_senha:s, p_versao:VERSAO })
+      });
+
+      if(!resp.ok){ mostrarErro("Falha de conexão. Tente novamente."); return; }
+      let data = await resp.json();
+      if(Array.isArray(data)) data = data[0];
+      if(data && typeof data === "string"){ try{ data = JSON.parse(data); }catch(e){} }
+
+      if(data && data.ok){
+        abrirPainel(u, data.validade);
+      }else{
+        const m = data && data.motivo ? (MOTIVOS[data.motivo] || "Não foi possível entrar.") : "Não foi possível entrar.";
+        mostrarErro(m);
+      }
+    }catch(e){
+      mostrarErro("Falha de conexão. Verifique sua internet.");
+    }finally{
+      btn.disabled = false;
+      btn.textContent = txtOrig;
+    }
+  });
+
+  $("sair").addEventListener("click", () => {
+    $("senha").value = "";
+    $("painel").classList.remove("show");
+    $("login").style.display = "block";
+  });
+</script>
+</body>
+</html>
